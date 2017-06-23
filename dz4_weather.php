@@ -8,7 +8,7 @@ $units = "metric";
 $lang = "ru"; 
 $countDay = 2; 
 
-if($_GET["mode"] == "test") {
+if($_GET) {
   $data = file_get_contents("$city.$mode");
 } else
 {
@@ -26,9 +26,15 @@ if($_GET["mode"] == "test") {
 
 $weather = json_decode($data, true);
 $weather = $weather["list"];
-print_r("Получен массив с данными:<pre>");
-print_r($weather);
-echo("</pre>");
+
+ $arrayTemperatureNames = [
+  'day' => 'дневная',
+  'min' => 'минимальная',
+  'max' => 'максимальная',
+  'night' => 'ночная',
+  'eve' => 'вечерняя', 
+  'morn' => 'утренняя'
+];
 
 foreach ($weather as $key => $val) {
   print_r("<b>Дата: ".date("d D M Y",$val["dt"])."</b></br>");
@@ -37,26 +43,7 @@ foreach ($weather as $key => $val) {
       case 'temp':
         print_r("Температура: ");
         foreach ($sub_val as $type_temp => $temp) {
-          switch ($type_temp) {
-            case 'day':
-              print_r("дневная: ".$temp."; ");
-              break;
-            case 'min':
-              print_r("минимальная: ".$temp."; ");
-              break;                   
-            case 'max':
-              print_r("максимальная: ".$temp."; ");
-              break;        
-            case 'night':
-              print_r("ночная: ".$temp."; ");
-              break;                   
-            case 'eve':
-              print_r("вечерняя: ".$temp."; ");
-              break;                   
-            case 'morn':
-              print_r("утренняя: ".$temp."; ");
-              break;                   
-           }
+          echo $arrayTemperatureNames[$type_temp].': '.$temp.'; ';
         }
         print_r("</br>");
         break;
